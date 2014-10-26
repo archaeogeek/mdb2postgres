@@ -1,6 +1,6 @@
 import pyodbc, csv, sys, os
 
-connect_string = 'DRIVER={Microsoft Access Driver (*.mdb)};DBQ=Z:\\Jo\\downloads\\Lancaster_uad.mdb'
+connect_string = 'DRIVER={Microsoft Access Driver (*.mdb)};DBQ=Z:\\Jo\\Copy\\Git_Repos\\mdbtopostgresq\l\Lancaster_uad.mdb'
 
 def get_tables(connection):
     try:
@@ -16,15 +16,16 @@ def get_data(tblName, connection):
         cursor.execute('SELECT * FROM %s' %(tblName))
         return [row for row in cursor]
     except:
-        print "There is a problem with getting data from %s" % tblName
-        pass #fail on this one, skip and move on
+        e = sys.exc_info()[1]
+    	print "Data Error: %s with table %s" % (e,tblName)
 
 def get_columns(tblName, connection):
     try:
         cursor = connection.cursor()
         return [row[3] for row in cursor.columns(table = tblName)]
     except:
-        print "There is a problem with getting columns from %s" % tblName
+    	e = sys.exc_info()[1]
+    	print "Column Error: %s with table %s" % (e,tblName)
         pass
 
 def qexport():
